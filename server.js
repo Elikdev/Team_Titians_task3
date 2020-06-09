@@ -2,7 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const mongoDbConnection = require('./config/dbconfig');
 const smsRouter = require('./routes/index');
+
+//load the database
+mongoDbConnection();
 
 const app = express();
 

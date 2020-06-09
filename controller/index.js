@@ -3,6 +3,7 @@ const twilio = require('twilio');
 const statusCode = require('http-status');
 const fetch = require('node-fetch');
 const client = twilio(config.ACCOUNT_SID, config.AUTH_TOKEN);
+const Sms = require('../models/index');
 
 exports.sendSms = async (req, res) => {
 	const { message, mobile_num } = req.body;
@@ -25,6 +26,12 @@ exports.sendSms = async (req, res) => {
 		};
 		const sendSms = await client.messages.create(smsOptions);
 		if (sendSms) {
+			const sms = new Sms({
+				message,
+				mobile_num
+			});
+			const savedSms = await sms.save();
+			console.log("message sent and saved", savedSms);
 			return res.status(statusCode.OK).json({
 				message: 'message sent successfully',
 				sendSms,
