@@ -1,9 +1,9 @@
 const config = require('../config/index');
 const twilio = require('twilio');
 const statusCode = require('http-status');
-const fetch = require('node-fetch');
 const client = twilio(config.ACCOUNT_SID, config.AUTH_TOKEN);
 const Sms = require('../models/index');
+const request = require('request-promise');
 
 exports.sendSms = async (req, res) => {
 	const { message, mobile_num } = req.body;
@@ -28,10 +28,10 @@ exports.sendSms = async (req, res) => {
 		if (sendSms) {
 			const sms = new Sms({
 				message,
-				mobile_num
+				mobile_num,
 			});
 			const savedSms = await sms.save();
-			console.log("message sent and saved", savedSms);
+			console.log('message sent and saved', savedSms);
 			return res.status(statusCode.OK).json({
 				message: 'message sent successfully',
 				sendSms,
@@ -46,16 +46,26 @@ exports.sendSms = async (req, res) => {
 };
 
 exports.checkBalance = async (req, res) => {
-	const balanceUrl = `https://api.twilio.com/2010-04-01/Accounts/${config.ACCOUNT_SID}/Balance.json`;
 	try {
-		const response = await fetch(balanceUrl);
-		const data = await response.json();
-		console.log(data);
-		return res.status(statusCode.OK).json({
-			message: 'Received sms balance',
-			balance: data.balance,
-			currency: data.currency
-		})
+		var options = {
+			uri: `https://api.twilio.com/2010-04-01/Accounts/${config.ACCOUNT_SID}/Balance.json`,
+			auth: {
+				user: config.ACCOUNT_SID,
+				pass: config.AUTH_TOKEN,
+			},
+			json: true,
+		};
+
+		const body = await request(options);
+		if (body) {
+			return res.status(statusCode.OK).json({
+				message: `Your current account balance is ${body.balance} in ${body.currency}`,
+			});
+		} else {
+			return res.status(statusCode.BAD_REQUEST).json({
+				message: `An error occured while processing your request`,
+			});
+		}
 	} catch (error) {
 		console.log(`error in checking sms balance >>> ${error}`);
 		return res.status(statusCode.SERVICE_UNAVAILABLE).json({

@@ -26,7 +26,8 @@
     "http-status": "^1.4.2",
     "mongoose": "^5.9.18",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
     "twilio": "^3.45.0"
   },
   "devDependencies": {
