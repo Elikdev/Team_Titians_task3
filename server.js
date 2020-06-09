@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const router = require('./routes');
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.get('/api/v1', (req, res) => {
         Please read the api documentation for how to go about its usage..
     `);
 });
+
+app.use("api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
