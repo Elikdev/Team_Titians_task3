@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const smsRouter = require('./routes/index');
 
 const app = express();
 
@@ -15,8 +17,10 @@ app.get('/api/v1', (req, res) => {
     `);
 });
 
+app.use('/api/v1/sms', smsRouter);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-	console.log('Server is up and running');
+	console.log(`Server is up and running on port ${PORT}`);
 });
