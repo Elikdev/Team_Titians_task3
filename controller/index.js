@@ -73,3 +73,20 @@ exports.checkBalance = async (req, res) => {
 		});
 	}
 };
+
+exports.allSms = async (req, res) => {
+	try {
+		const sentMessages = await Sms.find().select('-__v');
+		return res.status(statusCode.OK).json({
+			message: `${sentMessages.length} ${
+				sentMessages.length > 1 ? `Messages` : `Message`
+			} found`,
+			sentMessages,
+		});
+	} catch (error) {
+		console.log('error from getting all sent messages >>>>> ', error);
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).json({
+			message: 'Something went wrong. Try again.',
+		});
+	}
+};
