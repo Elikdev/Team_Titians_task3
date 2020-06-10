@@ -13,7 +13,7 @@ Clone the repo and install the dependencies.
 
 ```bash
 git clone https://github.com/Elikdev/Team_Titians_task3.git
-cd trs
+cd Team_Titians_task3
 ```
 
 ```bash
