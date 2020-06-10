@@ -4,5 +4,5 @@ WORKDIR /usr/src/app
 ADD . /usr/src/app
 RUN chmod +x /usr/src/app/run.sh
 RUN npm install
-EXPOSE 7000
+EXPOSE 5000
 CMD ./run.sh

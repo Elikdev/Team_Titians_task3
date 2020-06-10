@@ -24,8 +24,8 @@ exports.sendSms = async (req, res) => {
 			from: config.TWILIO_NUMBER,
 			to: mobile_num,
 		};
-		const sendSms = await client.messages.create(smsOptions);
-		if (sendSms) {
+		const sentSms = await client.messages.create(smsOptions);
+		if (sentSms) {
 			const sms = new Sms({
 				message,
 				mobile_num,
@@ -34,11 +34,11 @@ exports.sendSms = async (req, res) => {
 			console.log('message sent and saved', savedSms);
 			return res.status(statusCode.OK).json({
 				message: 'message sent successfully',
-				sendSms,
+				sentSms: sentSms.sid,
 			});
 		}
 	} catch (error) {
-		console.log(`error in sending sms >>> ${error}`);
+		console.log(`error in sending sms >>> ${error.code}`);
 		return res.status(statusCode.SERVICE_UNAVAILABLE).json({
 			message: 'error in sending sms.. try again later',
 		});
@@ -67,7 +67,7 @@ exports.checkBalance = async (req, res) => {
 			});
 		}
 	} catch (error) {
-		console.log(`error in checking sms balance >>> ${error}`);
+		console.log(`error in checking sms balance >>> ${error.code}`);
 		return res.status(statusCode.SERVICE_UNAVAILABLE).json({
 			message: 'Unable to check sms balance.. try again later',
 		});
